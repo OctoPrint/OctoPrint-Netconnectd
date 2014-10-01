@@ -61,6 +61,14 @@ $(function() {
             }
         });
 
+        self.daemonOnline = ko.computed(function() {
+            return (!(self.error()));
+        });
+
+        self.apRunning = ko.computed(function() {
+            return self.status.connections.ap();
+        });
+
         // initialize list helper
         self.listHelper = new ItemListHelper(
             "wifis",

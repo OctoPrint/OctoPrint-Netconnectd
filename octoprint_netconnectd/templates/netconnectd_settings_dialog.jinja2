@@ -44,18 +44,18 @@
         </ul>
     </div>
 
-    <button class="btn btn-primary btn-block" data-bind="click: function() { $root.refresh() }">{{ _('Refresh') }}</button>
+    <button class="btn btn-primary btn-block" data-bind="click: function() { $root.refresh() }, enable: $root.daemonOnline()">{{ _('Refresh') }}</button>
 
     <div>
         <small class="muted">{{ _('netconnectd socket') }}: <span data-bind="text: settings.plugins.netconnectd.socket"></span></small>
     </div>
 
     <div>
-        <div><a href="#" onclick="$(this).children().toggleClass('icon-caret-right icon-caret-down').parent().parent().next().slideToggle('fast')"><i class="icon-caret-right"></i> {{ _('Advanced') }}</a></div>
-        <div class="hide">
-            <button class="btn" data-bind="click: function() { $root.sendReset() }">{{ _('Reset daemon') }}</button>
-            <button class="btn" data-bind="click: function() { $root.sendForgetWifi() }">{{ _('Forget wifi') }}</button>
-            <button class="btn" data-bind="click: function() { if ($root.status.connections.ap()) { $root.sendStartAp(); } else { $root.sendStopAp(); } }"><span data-bind="visible: $root.status.connections.ap()">{{ _('Start AP') }}</span><span data-bind="visible: !$root.status.connections.ap()">{{ _('Stop AP') }}</span></button>
+        <div><small><a href="#" class="muted" onclick="$(this).children().toggleClass('icon-caret-right icon-caret-down').parent().parent().parent().next().slideToggle('fast')"><i class="icon-caret-right"></i> {{ _('Advanced options') }}</a></small></div>
+        <div class="hide row-fluid">
+            <button class="btn span4" data-bind="click: function() { if ($root.status.connections.ap()) { $root.sendStartAp(); } else { $root.sendStopAp(); } }, enable: $root.daemonOnline()"><span data-bind="visible: !$root.apRunning() && $root.daemonOnline()">{{ _('Start AP') }}</span><span data-bind="visible: $root.apRunning() && $root.daemonOnline()">{{ _('Stop AP') }}</span><span data-bind="visible: !$root.daemonOnline()">{{ _('Daemon offline') }}</span></button>
+            <button class="btn span4" data-bind="click: function() { $root.sendForgetWifi() }, enable: $root.daemonOnline()">{{ _('Forget wifi') }}</button>
+            <button class="btn span4" data-bind="click: function() { $root.sendReset() }, enable: $root.daemonOnline()">{{ _('Reset daemon') }}</button>
         </div>
     </div>
 
