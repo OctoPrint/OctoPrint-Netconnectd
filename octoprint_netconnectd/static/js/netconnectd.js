@@ -218,6 +218,14 @@ $(function() {
             }, 5000);
         };
 
+        self.sendReset = function() {
+            self._postCommand("reset", {});
+        };
+
+        self.sendForgetWifi = function() {
+            self._postCommand("forget_wifi", {});
+        };
+
         self.tryReconnect = function() {
             var hostname = self.hostname();
 

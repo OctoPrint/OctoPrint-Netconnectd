@@ -50,6 +50,15 @@
         <small class="muted">{{ _('netconnectd socket') }}: <span data-bind="text: settings.plugins.netconnectd.socket"></span></small>
     </div>
 
+    <div>
+        <div><a href="#" onclick="$(this).children().toggleClass('icon-caret-right icon-caret-down').parent().parent().next().slideToggle('fast')"><i class="icon-caret-right"></i> {{ _('Advanced') }}</a></div>
+        <div class="hide">
+            <button class="btn" data-bind="click: function() { $root.sendReset() }">{{ _('Reset daemon') }}</button>
+            <button class="btn" data-bind="click: function() { $root.sendForgetWifi() }">{{ _('Forget wifi') }}</button>
+            <button class="btn" data-bind="click: function() { if ($root.status.connections.ap()) { $root.sendStartAp(); } else { $root.sendStopAp(); } }"><span data-bind="visible: $root.status.connections.ap()">{{ _('Start AP') }}</span><span data-bind="visible: !$root.status.connections.ap()">{{ _('Stop AP') }}</span></button>
+        </div>
+    </div>
+
     <div id="settings_plugin_netconnectd_wificonfig" class="modal hide fade">
         <div class="modal-header">
             <a href="#" class="close" data-dismiss="modal" aria-hidden="true">&times;</a>

@@ -71,6 +71,8 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			"stop_ap": [],
 			"refresh_wifi": [],
 			"configure_wifi": ["ssid", "psk"],
+			"forget_wifi": [],
+			"reset": []
 		}
 
 	def on_api_get(self, request):
@@ -98,11 +100,17 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 			self._configure_and_select_wifi(data["ssid"], data["psk"], force=data["force"] if "force" in data else False)
 
+		elif command == "forget_wifi":
+			self._forget_wifi()
+
+		elif command == "reset":
+			self._reset()
+
 		elif command == "start_ap":
-			self.logger.info("Starting ap...")
+			self._start_ap()
 
 		elif command == "stop_ap":
-			self.logger.info("Stopping ap...")
+			self._stop_ap()
 
 	##~~ AssetPlugin API
 
@@ -156,6 +164,30 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 		flag, content = self._send_message("start_wifi", dict())
 		if not flag:
 			raise RuntimeError("Error while selecting wifi: " + content)
+
+	def _forget_wifi(self):
+		payload = dict()
+		flag, content = self._send_message("forget_wifi", payload)
+		if not flag:
+			raise RuntimeError("Error while forgetting wifi: " + content)
+
+	def _reset(self):
+		payload = dict()
+		flag, content = self._send_message("reset", payload)
+		if not flag:
+			raise RuntimeError("Error while factory resetting netconnectd: " + content)
+
+	def _start_ap(self):
+		payload = dict()
+		flag, content = self._send_message("start_ap", payload)
+		if not flag:
+			raise RuntimeError("Error while starting ap: " + content)
+
+	def _stop_ap(self):
+		payload = dict()
+		flag, content = self._send_message("stop_ap", payload)
+		if not flag:
+			raise RuntimeError("Error while stopping ap: " + content)
 
 	def _send_message(self, message, data):
 		obj = dict()
