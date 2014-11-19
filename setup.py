@@ -24,7 +24,7 @@ def params():
 	license = "AGPLv3"
 
 	packages = ["octoprint_netconnectd"]
-	package_data = {"octoprint": package_data_dirs('octoprint_netconnectd', ['static', 'templates'])}
+	package_data = {"octoprint_netconnectd": package_data_dirs('octoprint_netconnectd', ['static', 'templates'])}
 
 	include_package_data = True
 	zip_safe = False
