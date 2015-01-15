@@ -326,5 +326,5 @@ $(function() {
     }
 
     // view model class, parameters for constructor, container to bind to
-    ADDITIONAL_VIEWMODELS.push([NetconnectdViewModel, ["loginStateViewModel", "settingsViewModel"], document.getElementById("settings_plugin_netconnectd_dialog")]);
+    ADDITIONAL_VIEWMODELS.push([NetconnectdViewModel, ["loginStateViewModel", "settingsViewModel"], document.getElementById("settings_plugin_netconnectd")]);
 });

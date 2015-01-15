@@ -57,11 +57,8 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 	def get_template_vars(self):
 		return dict(
-			_settings_menu_entry="Network connection"
+			_settings=dict(name="Network connection", custom_bindings=True)
 		)
-
-	def get_template_folder(self):
-		return os.path.join(os.path.dirname(os.path.realpath(__file__)), "templates")
 
 	##~~ SimpleApiPlugin API
 
@@ -113,9 +110,6 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			self._stop_ap()
 
 	##~~ AssetPlugin API
-
-	def get_asset_folder(self):
-		return os.path.join(os.path.dirname(os.path.realpath(__file__)), "static")
 
 	def get_assets(self):
 		return {
