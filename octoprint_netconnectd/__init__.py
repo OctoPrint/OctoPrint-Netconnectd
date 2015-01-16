@@ -55,10 +55,10 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 	##~~ TemplatePlugin API
 
-	def get_template_vars(self):
-		return dict(
-			_settings=dict(name="Network connection", custom_bindings=True)
-		)
+	def get_template_configs(self):
+		return [
+			dict(type="settings", name="Network connection")
+		]
 
 	##~~ SimpleApiPlugin API
 
