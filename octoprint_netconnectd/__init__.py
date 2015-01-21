@@ -15,7 +15,8 @@ import octoprint.plugin
 
 default_settings = {
 	"socket": "/var/run/netconnectd.sock",
-	"hostname": None
+	"hostname": None,
+	"timeout": 10,
 }
 s = octoprint.plugin.plugin_settings("netconnectd", defaults=default_settings)
 
@@ -42,7 +43,8 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 	def on_settings_load(self):
 		return {
 			"socket": s.get(["socket"]),
-			"hostname": s.get(["hostname"])
+			"hostname": s.get(["hostname"]),
+			"timeout": s.getInt(["timeout"])
 		}
 
 	def on_settings_save(self, data):
@@ -50,6 +52,8 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			s.set(["socket"], data["socket"])
 		if "hostname" in data and data["hostname"]:
 			s.set(["hostname"], data["hostname"])
+		if "timeout" in data:
+			s.setInt(["timeout"], data["timeout"])
 
 		self.address = s.get(["socket"])
 
@@ -192,7 +196,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 		import socket
 		sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		sock.settimeout(10)
+		sock.settimeout(s.getInt(["timeout"]))
 		try:
 			sock.connect(self.address)
 			sock.sendall(js + '\x00')
