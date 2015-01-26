@@ -234,8 +234,6 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			sock.close()
 
 __plugin_name__ = "netconnectd client"
-__plugin_version__ = "0.1"
-__plugin_description__ = "Client for netconnectd that allows configuration of netconnectd through OctoPrint's settings dialog"
 __plugin_implementations__ = []
 
 def __plugin_check__():
