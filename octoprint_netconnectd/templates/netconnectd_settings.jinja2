@@ -53,7 +53,7 @@
     <div>
         <div><small><a href="#" class="muted" onclick="$(this).children().toggleClass('icon-caret-right icon-caret-down').parent().parent().parent().next().slideToggle('fast')"><i class="icon-caret-right"></i> {{ _('Advanced options') }}</a></small></div>
         <div class="hide row-fluid">
-            <button class="btn span6" data-bind="click: function() { if ($root.status.connections.ap()) { $root.sendStartAp(); } else { $root.sendStopAp(); } }, enable: $root.daemonOnline()"><span data-bind="visible: !$root.apRunning() && $root.daemonOnline()">{{ _('Start AP') }}</span><span data-bind="visible: $root.apRunning() && $root.daemonOnline()">{{ _('Stop AP') }}</span><span data-bind="visible: !$root.daemonOnline()">{{ _('Daemon offline') }}</span></button>
+            <button class="btn span6" data-bind="click: function() { if ($root.apRunning()) { $root.sendStopAp(); } else { $root.sendStartAp(); } }, enable: $root.daemonOnline()"><span data-bind="visible: !$root.apRunning() && $root.daemonOnline()">{{ _('Start AP') }}</span><span data-bind="visible: $root.apRunning() && $root.daemonOnline()">{{ _('Stop AP') }}</span><span data-bind="visible: !$root.daemonOnline()">{{ _('Daemon offline') }}</span></button>
             <button class="btn span6" data-bind="click: function() { $root.sendReset() }, enable: $root.daemonOnline()">{{ _('Reset daemon') }}</button>
         </div>
     </div>
