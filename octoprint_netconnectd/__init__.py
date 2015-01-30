@@ -6,19 +6,10 @@ __license__ = 'GNU Affero General Public License http://www.gnu.org/licenses/agp
 __copyright__ = "Copyright (C) 2014 The OctoPrint Project - Released under terms of the AGPLv3 License"
 
 
-import os
 import logging
 from flask import jsonify
 
 import octoprint.plugin
-
-
-default_settings = {
-	"socket": "/var/run/netconnectd.sock",
-	"hostname": None,
-	"timeout": 10,
-}
-s = octoprint.plugin.plugin_settings("netconnectd", defaults=default_settings)
 
 
 class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
@@ -27,35 +18,31 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
                                 octoprint.plugin.AssetPlugin):
 
 	def __init__(self):
-		self.logger = logging.getLogger("plugins.netconnectd." + __name__)
-		self.address = s.get(["socket"])
+		self.address = None
+
+	def initialize(self):
+		self.address = self._settings.get(["socket"])
 
 	@property
 	def hostname(self):
-		if s.get(["hostname"]):
-			return s.get(["hostname"])
+		if self._settings.get(["hostname"]):
+			return self._settings.get(["hostname"])
 		else:
 			import socket
 			return socket.gethostname() + ".local"
 
 	##~~ SettingsPlugin
 
-	def on_settings_load(self):
-		return {
-			"socket": s.get(["socket"]),
-			"hostname": s.get(["hostname"]),
-			"timeout": s.getInt(["timeout"])
-		}
-
 	def on_settings_save(self, data):
-		if "socket" in data and data["socket"]:
-			s.set(["socket"], data["socket"])
-		if "hostname" in data and data["hostname"]:
-			s.set(["hostname"], data["hostname"])
-		if "timeout" in data:
-			s.setInt(["timeout"], data["timeout"])
+		super(NetconnectdSettingsPlugin, self).on_settings_save(data)
+		self.address = self._settings.get(["socket"])
 
-		self.address = s.get(["socket"])
+	def get_settings_defaults(self):
+		return {
+			"socket": "/var/run/netconnectd.sock",
+			"hostname": None,
+			"timeout": 10,
+		}
 
 	##~~ TemplatePlugin API
 
@@ -95,9 +82,9 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 		elif command == "configure_wifi":
 			if data["psk"]:
-				self.logger.info("Configuring wifi {ssid} and psk...".format(**data))
+				self._logger.info("Configuring wifi {ssid} and psk...".format(**data))
 			else:
-				self.logger.info("Configuring wifi {ssid}...".format(**data))
+				self._logger.info("Configuring wifi {ssid}...".format(**data))
 
 			self._configure_and_select_wifi(data["ssid"], data["psk"], force=data["force"] if "force" in data else False)
 
@@ -127,7 +114,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 	def _get_wifi_list(self, force=False):
 		payload = dict()
 		if force:
-			self.logger.info("Forcing wifi refresh...")
+			self._logger.info("Forcing wifi refresh...")
 			payload["force"] = True
 
 		flag, content = self._send_message("list_wifi", payload)
@@ -196,7 +183,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 		import socket
 		sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		sock.settimeout(s.getInt(["timeout"]))
+		sock.settimeout(self._settings.getInt(["timeout"]))
 		try:
 			sock.connect(self.address)
 			sock.sendall(js + '\x00')
@@ -217,23 +204,23 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 			elif "error" in response:
 				# something went wrong
-				self.logger.warn("Request to netconnectd went wrong: " + response["error"])
+				self._logger.warn("Request to netconnectd went wrong: " + response["error"])
 				return False, response["error"]
 
 			else:
 				output = "Unknown response from netconnectd: {response!r}".format(response=response)
-				self.logger.warn(output)
+				self._logger.warn(output)
 				return False, output
 
 		except Exception as e:
 			output = "Error while talking to netconnectd: {}".format(e.message)
-			self.logger.warn(output)
+			self._logger.warn(output)
 			return False, output
 
 		finally:
 			sock.close()
 
-__plugin_name__ = "netconnectd client"
+__plugin_name__ = "Netconnectd Client"
 __plugin_implementations__ = []
 
 def __plugin_check__():
