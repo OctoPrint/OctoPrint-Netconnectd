@@ -221,16 +221,20 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			sock.close()
 
 __plugin_name__ = "Netconnectd Client"
-__plugin_implementations__ = []
 
 def __plugin_check__():
 	import sys
-	if not sys.platform == 'linux2':
-		logging.getLogger("octoprint.plugins." + __name__).warn("The netconnectd plugin only supports Linux")
-		return False
+	if sys.platform == 'linux2':
+		return True
 
-	global __plugin_implementations__
-	__plugin_implementations__ = [NetconnectdSettingsPlugin()]
+	logging.getLogger("octoprint.plugins." + __name__).warn("The netconnectd plugin only supports Linux")
+	return False
+
+def __plugin_init__():
+	# since we depend on a Linux environment, we instantiate the plugin implementation here since this will only be
+	# called if the OS check above was successful
+	global __plugin_implementation__
+	__plugin_implementation__ = NetconnectdSettingsPlugin()
 	return True
 
 
