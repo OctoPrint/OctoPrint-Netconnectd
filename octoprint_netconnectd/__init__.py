@@ -230,7 +230,7 @@ def __plugin_check__():
 	logging.getLogger("octoprint.plugins." + __name__).warn("The netconnectd plugin only supports Linux")
 	return False
 
-def __plugin_init__():
+def __plugin_load__():
 	# since we depend on a Linux environment, we instantiate the plugin implementation here since this will only be
 	# called if the OS check above was successful
 	global __plugin_implementation__
