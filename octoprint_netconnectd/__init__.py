@@ -25,8 +25,9 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 	@property
 	def hostname(self):
-		if self._settings.get(["hostname"]):
-			return self._settings.get(["hostname"])
+		hostname = self._settings.get(["hostname"])
+		if hostname:
+			return hostname
 		else:
 			import socket
 			return socket.gethostname() + ".local"
@@ -38,11 +39,11 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 		self.address = self._settings.get(["socket"])
 
 	def get_settings_defaults(self):
-		return {
-			"socket": "/var/run/netconnectd.sock",
-			"hostname": None,
-			"timeout": 10,
-		}
+		return dict(
+			socket="/var/run/netconnectd.sock",
+			hostname=None,
+			timeout=10
+		)
 
 	##~~ TemplatePlugin API
 
@@ -54,14 +55,14 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 	##~~ SimpleApiPlugin API
 
 	def get_api_commands(self):
-		return {
-			"start_ap": [],
-			"stop_ap": [],
-			"refresh_wifi": [],
-			"configure_wifi": ["ssid", "psk"],
-			"forget_wifi": [],
-			"reset": []
-		}
+		return dict(
+			start_ap=[],
+			stop_ap=[],
+			refresh_wifi=[],
+			configure_wifi=[],
+			forget_wifi=[],
+			reset=[]
+		)
 
 	def on_api_get(self, request):
 		try:
@@ -70,11 +71,11 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 		except Exception as e:
 			return jsonify(dict(error=e.message))
 
-		return jsonify({
-			"wifis": wifis,
-			"status": status,
-			"hostname": self.hostname
-		})
+		return jsonify(dict(
+			wifis=wifis,
+			status=status,
+			hostname=self.hostname
+		))
 
 	def on_api_command(self, command, data):
 		if command == "refresh_wifi":
@@ -103,11 +104,11 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 	##~~ AssetPlugin API
 
 	def get_assets(self):
-		return {
-			"js": ["js/netconnectd.js"],
-			"css": ["css/netconnectd.css"],
-			"less": ["less/netconnectd.less"]
-		}
+		return dict(
+			js=["js/netconnectd.js"],
+			css=["css/netconnectd.css"],
+			less=["less/netconnectd.less"]
+		)
 
 	##~~ Private helpers
 
@@ -183,7 +184,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 		import socket
 		sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-		sock.settimeout(self._settings.getInt(["timeout"]))
+		sock.settimeout(self._settings.get_int(["timeout"]))
 		try:
 			sock.connect(self.address)
 			sock.sendall(js + '\x00')
