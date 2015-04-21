@@ -64,6 +64,9 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			reset=[]
 		)
 
+	def is_api_adminonly(self):
+		return True
+
 	def on_api_get(self, request):
 		try:
 			wifis = self._get_wifi_list()

@@ -298,13 +298,14 @@ $(function() {
             });
         };
 
-        self.onBeforeBinding = function() {
-            self.settings = self.settingsViewModel.settings;
-            self.requestData();
+        self.onUserLoggedIn = function(user) {
+            if (user.admin) {
+                self.requestData();
+            }
         };
 
-        self.onDataUpdaterReconnect = function() {
-            self.requestData();
+        self.onBeforeBinding = function() {
+            self.settings = self.settingsViewModel.settings;
         };
 
         self.onSettingsShown = function() {
