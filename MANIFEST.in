@@ -1,2 +1,3 @@
 recursive-include octoprint_netconnectd/static *
 recursive-include octoprint_netconnectd/templates *
+include requirements.txt
