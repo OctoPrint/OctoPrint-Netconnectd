@@ -7,10 +7,11 @@ __copyright__ = "Copyright (C) 2014 The OctoPrint Project - Released under terms
 
 
 import logging
-from flask import jsonify
+from flask import jsonify, make_response
 
 import octoprint.plugin
 
+from octoprint.server import admin_permission
 
 class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
                                 octoprint.plugin.TemplatePlugin,
@@ -84,7 +85,11 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 		if command == "refresh_wifi":
 			return jsonify(self._get_wifi_list(force=True))
 
-		elif command == "configure_wifi":
+		# any commands processed after this check require admin permissions
+		if not admin_permission.can():
+			return make_response("Insufficient rights", 403)
+
+		if command == "configure_wifi":
 			if data["psk"]:
 				self._logger.info("Configuring wifi {ssid} and psk...".format(**data))
 			else:

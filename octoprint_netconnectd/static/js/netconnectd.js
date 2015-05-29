@@ -169,6 +169,8 @@ $(function() {
         };
 
         self.configureWifi = function(data) {
+            if (!self.loginState.isAdmin()) return;
+
             self.editorWifi = data;
             self.editorWifiSsid(data.ssid);
             self.editorWifiPassphrase1(undefined);
@@ -191,10 +193,12 @@ $(function() {
         };
 
         self.sendStartAp = function() {
+            if (!self.loginState.isAdmin()) return;
             self._postCommand("start_ap", {});
         };
 
         self.sendStopAp = function() {
+            if (!self.loginState.isAdmin()) return;
             self._postCommand("stop_ap", {});
         };
 
@@ -206,6 +210,8 @@ $(function() {
         };
 
         self.sendWifiConfig = function(ssid, psk, successCallback, failureCallback) {
+            if (!self.loginState.isAdmin()) return;
+
             self.working(true);
             if (self.status.connections.ap()) {
                 self.reconnectInProgress = true;
@@ -227,10 +233,13 @@ $(function() {
         };
 
         self.sendReset = function() {
+            if (!self.loginState.isAdmin()) return;
+
             self._postCommand("reset", {});
         };
 
         self.sendForgetWifi = function() {
+            if (!self.loginState.isAdmin()) return;
             self._postCommand("forget_wifi", {});
         };
 
@@ -327,5 +336,5 @@ $(function() {
     }
 
     // view model class, parameters for constructor, container to bind to
-    ADDITIONAL_VIEWMODELS.push([NetconnectdViewModel, ["loginStateViewModel", "settingsViewModel"], document.getElementById("settings_plugin_netconnectd")]);
+    ADDITIONAL_VIEWMODELS.push([NetconnectdViewModel, ["loginStateViewModel", "settingsViewModel"], "#settings_plugin_netconnectd"]);
 });
