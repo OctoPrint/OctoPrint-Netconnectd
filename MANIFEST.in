@@ -1,3 +1,6 @@
 recursive-include octoprint_netconnectd/static *
 recursive-include octoprint_netconnectd/templates *
+recursive-include octoprint_netconnectd/translations *
+include LICENSE
 include requirements.txt
+include README.md
