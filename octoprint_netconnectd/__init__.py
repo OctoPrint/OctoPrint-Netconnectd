@@ -70,8 +70,11 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 
 	def on_api_get(self, request):
 		try:
-			wifis = self._get_wifi_list()
 			status = self._get_status()
+			if status["wifi"]["present"]:
+				wifis = self._get_wifi_list()
+			else:
+				wifis = []
 		except Exception as e:
 			return jsonify(dict(error=e.message))
 

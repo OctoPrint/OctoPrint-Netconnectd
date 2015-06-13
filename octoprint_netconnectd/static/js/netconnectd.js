@@ -23,7 +23,8 @@ $(function() {
             },
             wifi: {
                 current_ssid: ko.observable(),
-                current_address: ko.observable()
+                current_address: ko.observable(),
+                present: ko.observable()
             }
         };
         self.statusCurrentWifi = ko.observable();
@@ -40,25 +41,33 @@ $(function() {
         self.error = ko.observable(false);
 
         self.connectionStateText = ko.computed(function() {
+            var text;
+
             if (self.error()) {
-                return gettext("Error while talking to netconnectd, is the service running?");
+                text = gettext("Error while talking to netconnectd, is the service running?");
             } else if (self.status.connections.ap()) {
-                return gettext("Acting as access point");
+                text = gettext("Acting as access point");
             } else if (self.status.link()) {
                 if (self.status.connections.wired()) {
-                    return gettext("Connected via wire");
+                    text = gettext("Connected via wire");
                 } else if (self.status.connections.wifi()) {
                     if (self.status.wifi.current_ssid()) {
-                        return _.sprintf(gettext("Connected via wifi (SSID \"%(ssid)s\")"), {ssid: self.status.wifi.current_ssid()});
+                        text = _.sprintf(gettext("Connected via wifi (SSID \"%(ssid)s\")"), {ssid: self.status.wifi.current_ssid()});
                     } else {
-                        return gettext("Connected via wifi (unknown SSID)")
+                        text = gettext("Connected via wifi (unknown SSID)")
                     }
                 } else {
-                    return gettext("Connected (unknown connection)");
+                    text = gettext("Connected (unknown connection)");
                 }
             } else {
-                return gettext("Not connected to network");
+                text = gettext("Not connected to network");
             }
+
+            if (!self.status.wifi.present()) {
+                text += ", " + gettext("no wifi interface present")
+            }
+
+            return text;
         });
 
         self.daemonOnline = ko.computed(function() {
@@ -118,6 +127,7 @@ $(function() {
             self.status.connections.wired(response.status.connections.wired);
             self.status.wifi.current_ssid(response.status.wifi.current_ssid);
             self.status.wifi.current_address(response.status.wifi.current_address);
+            self.status.wifi.present(response.status.wifi.present);
 
             self.statusCurrentWifi(undefined);
             if (response.status.wifi.current_ssid && response.status.wifi.current_address) {

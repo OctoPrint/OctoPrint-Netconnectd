@@ -44,7 +44,7 @@
         </ul>
     </div>
 
-    <button class="btn btn-primary btn-block" data-bind="click: function() { $root.refresh() }, enable: $root.daemonOnline()">{{ _('Refresh') }}</button>
+    <button class="btn btn-primary btn-block" data-bind="click: function() { $root.refresh() }, enable: $root.daemonOnline() && $root.status.wifi.present()">{{ _('Refresh') }}</button>
 
     <div>
         <small class="muted">{{ _('netconnectd socket') }}: <span data-bind="text: settings.plugins.netconnectd.socket"></span></small>
