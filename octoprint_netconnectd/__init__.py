@@ -72,7 +72,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 			wifis = self._get_wifi_list()
 			status = self._get_status()
 		except Exception as e:
-			return jsonify(dict(error=e.message))
+			return jsonify(dict(error=str(e)))
 
 		return jsonify(dict(
 			wifis=wifis,
@@ -217,7 +217,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 				return False, output
 
 		except Exception as e:
-			output = "Error while talking to netconnectd: {}".format(e.message)
+			output = "Error while talking to netconnectd: {}".format(e)
 			self._logger.warn(output)
 			return False, output
 
