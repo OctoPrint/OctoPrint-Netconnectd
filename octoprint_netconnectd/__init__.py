@@ -36,7 +36,7 @@ class NetconnectdSettingsPlugin(octoprint.plugin.SettingsPlugin,
 	##~~ SettingsPlugin
 
 	def on_settings_save(self, data):
-		super(NetconnectdSettingsPlugin, self).on_settings_save(data)
+		octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 		self.address = self._settings.get(["socket"])
 
 	def get_settings_defaults(self):
