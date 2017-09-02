@@ -151,9 +151,6 @@ $(function() {
                 var qualityInt = parseInt(wifi.quality);
                 var quality = undefined;
                 if (!isNaN(qualityInt)) {
-                    if (qualityInt <= 0) {
-                        qualityInt = (-1) * qualityInt;
-                    }
                     quality = qualityInt;
                 }
 
@@ -162,7 +159,7 @@ $(function() {
                     address: wifi.address,
                     encrypted: wifi.encrypted,
                     quality: quality,
-                    qualityText: (quality != undefined) ? "" + quality + "%" : undefined
+                    qualityText: (quality != undefined) ? "" + quality + " dBm" : undefined
                 });
             });
 
