@@ -1,3 +1,11 @@
+---
+
+Provided as-is, currently not actively maintained.
+
+[OctoPrint](http://octoprint.org) is eating up too much of my time and I don't find myself at liberty to actively maintain this project for the foreseeable future. If it works for you, great. If it doesn't, sorry, I can't look into it.
+
+---
+
 # netconnectd plugin for OctoPrint
 
 ![netconnectd plugin: Overview with list of available wifis](https://i.imgur.com/Yjmxypvl.png)
